@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; connect-src 'self' http://tramway.proxy.rlwy.net:54625 https://tramway.proxy.rlwy.net:54625"
+        }
+      ]
+    }
+  ]
+}
