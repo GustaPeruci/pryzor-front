@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import SimpleValidation from './components/SimpleValidation'
 import BuyAnalyzer from './components/BuyAnalyzer'
+import { apiConfig } from './config/api'
 import './App.css'
 
 // Tipos TypeScript para nossos dados (como interfaces em outras linguagens)
@@ -36,14 +37,14 @@ function App() {
         
         // Buscar lista de jogos
         console.log('📡 Fazendo requisição para /api/games...');
-        const gamesResponse = await fetch('http://127.0.0.1:5000/api/games');
+        const gamesResponse = await fetch(apiConfig.endpoints.games);
         console.log('📡 Resposta games:', gamesResponse.status);
         const gamesData = await gamesResponse.json();
         console.log('📊 Dados games:', gamesData);
         
         // Buscar predições
         console.log('📡 Fazendo requisição para /api/predictions...');
-        const predictionsResponse = await fetch('http://127.0.0.1:5000/api/predictions');
+        const predictionsResponse = await fetch(apiConfig.endpoints.predictions);
         console.log('📡 Resposta predictions:', predictionsResponse.status);
         
         if (predictionsResponse.ok) {

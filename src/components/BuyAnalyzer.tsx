@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { apiConfig } from '../config/api';
 
 interface BuyAnalysisResult {
   success: boolean;
@@ -77,7 +78,7 @@ export default function BuyAnalyzer() {
 
   const loadRegisteredGames = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/games');
+      const response = await fetch(apiConfig.endpoints.games);
       const data = await response.json();
       if (data.success) {
         setRegisteredGames(data.data);
@@ -97,7 +98,7 @@ export default function BuyAnalyzer() {
 
     setLoading(true);
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/buy-analysis/${encodeURIComponent(gameName)}`);
+      const response = await fetch(`${apiConfig.endpoints.buyAnalysis}/${encodeURIComponent(gameName)}`);
       const data = await response.json();
       setAnalysisResult(data);
     } catch (error) {
@@ -123,7 +124,7 @@ export default function BuyAnalyzer() {
   const loadAvailableGames = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/buy-analysis');
+      const response = await fetch(apiConfig.endpoints.buyAnalysis);
       const data = await response.json();
       if (data.success) {
         setAvailableGames(data.games);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiConfig } from '../config/api';
 
 interface ValidationSummary {
   total_predictions: number;
@@ -23,7 +24,7 @@ const SimpleValidation: React.FC = () => {
 
   const fetchValidationData = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/api/temporal-validation');
+      const response = await fetch(apiConfig.endpoints.temporalValidation);
       if (!response.ok) {
         throw new Error('Falha ao carregar dados de validação');
       }
