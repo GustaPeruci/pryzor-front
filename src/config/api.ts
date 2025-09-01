@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://tramway.proxy.rlwy.net:54625';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pryzor-back-production.up.railway.app';
 
 export const apiConfig = {
   baseURL: API_BASE_URL,
