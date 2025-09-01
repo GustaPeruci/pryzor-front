@@ -29,8 +29,17 @@ const SimpleValidation: React.FC = () => {
         throw new Error('Falha ao carregar dados de validação');
       }
       const result = await response.json();
-      setSummary(result.summary);
+      
+      // Log para debug
+      console.log('🔍 Validação Temporal - Resposta da API:', result);
+      
+      if (result.success && result.data && result.data.summary) {
+        setSummary(result.data.summary);
+      } else {
+        throw new Error('Estrutura de dados inválida recebida da API');
+      }
     } catch (err) {
+      console.error('❌ Erro ao carregar validação temporal:', err);
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setLoading(false);
