@@ -1,18 +1,20 @@
 import React from 'react';
 import { Game } from '../../services/api';
+import type { Discount30dResult } from '../../services/api';
 import { Card, Badge, Button } from '../ui';
 
 interface GameCardProps {
   game: Game;
   onAnalyze: (gameId: number) => void;
   analyzing?: boolean;
+  discountProb?: number; // 0..1
+  discountInfo?: Discount30dResult;
 }
 
-const GameCard: React.FC<GameCardProps> = ({ game, onAnalyze, analyzing = false }) => {
+const GameCard: React.FC<GameCardProps> = ({ game, onAnalyze, analyzing = false, discountProb, discountInfo }) => {
   const formatPrice = (price?: number) => {
     if (game.freetoplay === 1) return 'Gratuito';
-    if (price === undefined || price === null) return 'Ver Preço';
-    if (price === 0) return 'Ver Preço';
+    if (price === undefined || price === null || price === 0) return 'Ver Preço';
     return `R$ ${price.toFixed(2)}`;
   };
 
@@ -39,8 +41,19 @@ const GameCard: React.FC<GameCardProps> = ({ game, onAnalyze, analyzing = false 
               'info'
             }>
               {formatPrice(game.price)}
+              {typeof game.current_discount === 'number' && game.current_discount > 0 && (
+                <span className="ml-2 opacity-80">(-{Math.round(game.current_discount)}%)</span>
+              )}
             </Badge>
           </div>
+          {/* Probabilidade de desconto 30d */}
+          {typeof discountProb === 'number' && (
+            <div title={discountInfo ? `Atualizado em ${new Date(discountInfo.as_of_date).toLocaleDateString('pt-BR')} • limiar ${Math.round(discountInfo.threshold*100)}%` : ''}>
+              <Badge variant={discountProb >= 0.6 ? 'success' : discountProb >= 0.35 ? 'warning' : 'info'}>
+                {`Desconto 30d: ${(discountProb * 100).toFixed(0)}%`}
+              </Badge>
+            </div>
+          )}
         </div>
       </Card.Header>
 

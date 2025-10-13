@@ -85,9 +85,16 @@ function App() {
         {/* Lista de jogos */}
         {(games.length > 0 || loading) && (
           <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Resultados da Busca
             </h2>
+            {/* Legenda para o badge de Desconto 30d */}
+            <div className="text-sm text-gray-600 mb-4 flex items-center gap-3">
+              <span className="text-gray-500">Legenda:</span>
+              <span className="badge-success">Desconto 30d: ≥ 60% (alta probabilidade)</span>
+              <span className="badge-warning">35%–59% (média)</span>
+              <span className="badge-info">&lt; 35% (baixa)</span>
+            </div>
             <GameList
               games={games}
               loading={loading}

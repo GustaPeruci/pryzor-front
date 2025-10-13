@@ -29,6 +29,7 @@ export interface Game {
   freetoplay?: number;
   header_image?: string;
   price?: number;
+  current_discount?: number;
   detailed_description?: string;
   short_description?: string;
   developers?: string[];
@@ -81,6 +82,16 @@ export interface PriceAnalysis {
   };
 }
 
+// Desconto 30d (modelo ML)
+export interface Discount30dResult {
+  appid: number;
+  game_name: string;
+  as_of_date: string;
+  prob_discount_30d: number; // 0..1
+  will_discount_30d: boolean;
+  threshold: number;
+}
+
 // Funções da API
 export const gameApi = {
   // Buscar jogos com filtros
@@ -102,8 +113,8 @@ export const gameApi = {
     const mappedGames = (data.games || []).map((game: any) => ({
       ...game,
       id: game.appid || game.id,
-      // Para jogos na busca, vamos tentar buscar o preço atual mais tarde
-      // ou usar informação disponível
+      price: typeof game.current_price === 'number' ? game.current_price : game.price,
+      current_discount: typeof game.current_discount === 'number' ? game.current_discount : undefined,
     }));
     
     return {
@@ -160,7 +171,7 @@ export const gameApi = {
       const priceVariance = priceRange / stats.average_price;
       
       // Determinar posição do preço atual na escala
-      const pricePosition = (currentPrice - stats.min_price) / priceRange;
+  // const pricePosition = (currentPrice - stats.min_price) / priceRange;
       
       // Lógica de recomendação melhorada
       let recommendation: 'BUY-NOW' | 'WAIT' = 'WAIT';
@@ -244,6 +255,26 @@ export const gameApi = {
   getStatus: async (): Promise<{ status: string; message: string }> => {
     const response = await api.get('/');
     return response.data;
+  }
+};
+
+// API de previsão de desconto 30 dias
+export const discountApi = {
+  getOne: async (appid: number): Promise<Discount30dResult> => {
+    const res = await api.get('/api/ml/discount-30d', { params: { appid } });
+    return res.data as Discount30dResult;
+  },
+  getBatch: async (appids: number[]): Promise<Record<number, Discount30dResult>> => {
+    if (!appids || appids.length === 0) return {};
+    const res = await api.post('/api/ml/discount-30d/batch', { appids });
+    const results = res.data?.results || {};
+    const out: Record<number, Discount30dResult> = {};
+    for (const k of Object.keys(results)) {
+      const num = Number(k);
+      const v = results[k];
+      if (v && !v.error) out[num] = v as Discount30dResult;
+    }
+    return out;
   }
 };
 

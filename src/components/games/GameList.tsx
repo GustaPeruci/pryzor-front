@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Game } from '../../services/api';
+import { discountApi, Discount30dResult } from '../../services/api';
 import GameCard from './GameCard';
 import LoadingSpinner from '../ui/LoadingSpinner';
 
@@ -16,6 +17,32 @@ const GameList: React.FC<GameListProps> = ({
   onAnalyze,
   analyzingGameId
 }) => {
+  const [discounts, setDiscounts] = useState<Record<number, Discount30dResult>>({});
+
+  const appids = useMemo(() =>
+    Array.from(new Set(games.map(g => g.id || g.appid).filter(Boolean))) as number[]
+  , [games]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchDiscounts() {
+      if (!appids || appids.length === 0) { setDiscounts({}); return; }
+  // loading silencioso para não poluir UI
+      try {
+        const res = await discountApi.getBatch(appids.slice(0, 50));
+        if (cancelled) return;
+        const map: Record<number, Discount30dResult> = {};
+        Object.entries(res).forEach(([k, v]) => { map[Number(k)] = v as Discount30dResult; });
+        setDiscounts(map);
+      } catch (e) {
+        // silencioso no card, seguimos sem badge
+        setDiscounts({});
+      } finally { /* noop */ }
+    }
+    fetchDiscounts();
+    return () => { cancelled = true; };
+  }, [appids]);
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
@@ -51,6 +78,8 @@ const GameList: React.FC<GameListProps> = ({
           game={game}
           onAnalyze={onAnalyze}
           analyzing={analyzingGameId === (game.id || game.appid)}
+          discountProb={discounts[(game.id || game.appid)!]?.prob_discount_30d}
+          discountInfo={discounts[(game.id || game.appid)!]}
         />
       ))}
     </div>
