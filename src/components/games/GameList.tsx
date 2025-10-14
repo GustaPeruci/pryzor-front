@@ -9,13 +9,15 @@ interface GameListProps {
   loading?: boolean;
   onAnalyze: (gameId: number) => void;
   analyzingGameId?: number;
+  onInspect?: (appid: number) => void;
 }
 
 const GameList: React.FC<GameListProps> = ({
   games,
   loading = false,
   onAnalyze,
-  analyzingGameId
+  analyzingGameId,
+  onInspect
 }) => {
   const [discounts, setDiscounts] = useState<Record<number, Discount30dResult>>({});
 
@@ -80,6 +82,7 @@ const GameList: React.FC<GameListProps> = ({
           analyzing={analyzingGameId === (game.id || game.appid)}
           discountProb={discounts[(game.id || game.appid)!]?.prob_discount_30d}
           discountInfo={discounts[(game.id || game.appid)!]}
+          onInspect={onInspect}
         />
       ))}
     </div>

@@ -9,9 +9,10 @@ interface GameCardProps {
   analyzing?: boolean;
   discountProb?: number; // 0..1
   discountInfo?: Discount30dResult;
+  onInspect?: (appid: number) => void;
 }
 
-const GameCard: React.FC<GameCardProps> = ({ game, onAnalyze, analyzing = false, discountProb, discountInfo }) => {
+const GameCard: React.FC<GameCardProps> = ({ game, onAnalyze, analyzing = false, discountProb, discountInfo, onInspect }) => {
   const formatPrice = (price?: number) => {
     if (game.freetoplay === 1) return 'Gratuito';
     if (price === undefined || price === null || price === 0) return 'Ver Preço';
@@ -146,14 +147,23 @@ const GameCard: React.FC<GameCardProps> = ({ game, onAnalyze, analyzing = false,
         )}
 
         {/* Botão de análise */}
-        <Button
-          onClick={() => onAnalyze(game.id || game.appid || 0)}
-          loading={analyzing}
-          className="w-full"
-          disabled={game.freetoplay === 1}
-        >
-          {game.freetoplay === 1 ? 'Jogo Gratuito' : 'Analisar Preço'}
-        </Button>
+        <div className="grid grid-cols-2 gap-2">
+          <Button
+            onClick={() => onAnalyze(game.id || game.appid || 0)}
+            loading={analyzing}
+            className="w-full"
+            disabled={game.freetoplay === 1}
+          >
+            {game.freetoplay === 1 ? 'Gratuito' : 'Analisar'}
+          </Button>
+          <Button
+            onClick={() => onInspect && onInspect((game.id || game.appid || 0) as number)}
+            className="w-full"
+            variant="secondary"
+          >
+            Features
+          </Button>
+        </div>
       </Card.Content>
     </Card>
   );

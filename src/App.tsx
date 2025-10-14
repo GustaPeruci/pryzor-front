@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
+import ModelMetrics from './components/ml/ModelMetrics';
+import FeatureInspector from './components/ml/FeatureInspector';
 import GameSearch from './components/games/GameSearch';
 import GameList from './components/games/GameList';
 import PriceAnalysisResult from './components/analysis/PriceAnalysisResult';
@@ -14,6 +16,7 @@ function App() {
     game: Game;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [inspectAppid, setInspectAppid] = useState<number | null>(null);
 
   const handleSearch = useCallback(async (query: string) => {
     setLoading(true);
@@ -65,9 +68,12 @@ function App() {
       <Header />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section com busca */}
+        {/* Hero Section com busca + métricas do modelo */}
         <div className="mb-12">
           <GameSearch onSearch={handleSearch} loading={loading} />
+          <div className="mt-4">
+            <ModelMetrics />
+          </div>
         </div>
 
         {/* Mensagem de erro */}
@@ -100,6 +106,7 @@ function App() {
               loading={loading}
               onAnalyze={handleAnalyze}
               analyzingGameId={analyzingGameId}
+              onInspect={(appid) => setInspectAppid(appid)}
             />
           </div>
         )}
@@ -162,6 +169,10 @@ function App() {
           gameImage={analysis.game.header_image}
           onClose={closeAnalysis}
         />
+      )}
+
+      {inspectAppid && (
+        <FeatureInspector appid={inspectAppid} onClose={() => setInspectAppid(null)} />
       )}
     </div>
   );

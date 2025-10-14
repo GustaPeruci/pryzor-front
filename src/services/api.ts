@@ -92,6 +92,30 @@ export interface Discount30dResult {
   threshold: number;
 }
 
+// Tipos auxiliares para métricas e inspeção do modelo
+export interface DiscountModelMetrics {
+  threshold: number;
+  lookback_days?: number;
+  horizon_days?: number;
+  discount_threshold?: number;
+  class_prevalence?: number;
+  metrics?: { roc_auc_mean?: number | null; pr_auc_mean?: number | null };
+  calibration?: { method?: string; a?: number; b?: number };
+  best_params?: Record<string, any> | null;
+  created_at?: string;
+  n_samples?: number;
+  n_games?: number;
+  date_min?: string;
+  date_max?: string;
+}
+
+export type FeatureDescriptions = Record<string, string>;
+export interface FeatureInspectResponse {
+  appid: number;
+  features: Record<string, number>;
+  feature_names: string[];
+}
+
 // Funções da API
 export const gameApi = {
   // Buscar jogos com filtros
@@ -275,6 +299,18 @@ export const discountApi = {
       if (v && !v.error) out[num] = v as Discount30dResult;
     }
     return out;
+  },
+  getMetrics: async (): Promise<DiscountModelMetrics> => {
+    const res = await api.get('/api/ml/discount-30d/metrics');
+    return res.data as DiscountModelMetrics;
+  },
+  getFeatureDescriptions: async (): Promise<FeatureDescriptions> => {
+    const res = await api.get('/api/ml/discount-30d/feature-descriptions');
+    return res.data as FeatureDescriptions;
+  },
+  inspectFeatures: async (appid: number): Promise<FeatureInspectResponse> => {
+    const res = await api.get('/api/ml/discount-30d/inspect', { params: { appid } });
+    return res.data as FeatureInspectResponse;
   }
 };
 
