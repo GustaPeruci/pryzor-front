@@ -16,26 +16,34 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
     }
   };
 
+  const popularGames = [
+    'Counter-Strike',
+    'Portal',
+    'Dota 2',
+    'Cities: Skylines',
+    'Left 4 Dead 2'
+  ];
+
   return (
-    <div className="bg-gradient-to-br from-primary-50 to-white p-8 rounded-2xl">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+    <div className="bg-gradient-to-br from-primary-50 to-white p-6 rounded-2xl shadow-sm">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
           Encontre o Melhor Preço
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Pesquise por jogos na Steam e descubra quando é o melhor momento para comprar com nossa análise de preços inteligente
+        <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+          Pesquise por jogos na Steam e descubra quando é o melhor momento para comprar
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
             <Input
               type="text"
-              placeholder="Digite o nome do jogo (ex: Counter-Strike, Portal, Dota 2)"
+              placeholder="Digite o nome do jogo..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-lg py-3"
+              className="text-base py-2.5"
             />
           </div>
           <Button
@@ -43,7 +51,7 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
             size="lg"
             loading={loading}
             disabled={!searchQuery.trim() || loading}
-            className="px-8"
+            className="px-6"
           >
             <svg 
               className="w-5 h-5 mr-2" 
@@ -63,27 +71,18 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
         </div>
       </form>
 
-      {/* Sugestões populares */}
-      <div className="mt-8 text-center">
-        <p className="text-sm text-gray-500 mb-3">Jogos populares:</p>
+      {/* Sugestões populares compactas */}
+      <div className="mt-5 text-center">
+        <p className="text-xs text-gray-500 mb-2">Jogos populares:</p>
         <div className="flex flex-wrap justify-center gap-2">
-          {[
-            'Counter-Strike',
-            'Portal',
-            'Half-Life',
-            'Dota 2',
-            'Team Fortress 2',
-            'Garry\'s Mod',
-            'Cities: Skylines',
-            'Left 4 Dead 2'
-          ].map((game) => (
+          {popularGames.map((game) => (
             <button
               key={game}
               onClick={() => {
                 setSearchQuery(game);
                 onSearch(game);
               }}
-              className="px-3 py-1 text-sm bg-white border border-gray-200 rounded-full hover:border-primary-300 hover:bg-primary-50 transition-colors"
+              className="px-3 py-1.5 text-xs bg-white border border-gray-200 rounded-full hover:border-primary-300 hover:bg-primary-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
             >
               {game}

@@ -7,13 +7,13 @@ const MetricCard: React.FC<{
   description?: string;
   highlight?: boolean;
 }> = ({ label, value, description, highlight }) => (
-  <div className={`px-4 py-3 rounded-lg ${highlight ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}`}>
-    <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">{label}</div>
-    <div className={`text-2xl font-bold ${highlight ? 'text-blue-600' : 'text-gray-900'}`}>
+  <div className={`px-3 py-2.5 rounded-lg ${highlight ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'}`}>
+    <div className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-0.5">{label}</div>
+    <div className={`text-xl font-bold ${highlight ? 'text-blue-600' : 'text-gray-900'}`}>
       {value}
     </div>
     {description && (
-      <div className="text-xs text-gray-600 mt-1">{description}</div>
+      <div className="text-xs text-gray-600 mt-0.5">{description}</div>
     )}
   </div>
 );
@@ -47,11 +47,14 @@ const ModelMetrics: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <div className="animate-pulse flex space-x-4">
-          <div className="flex-1 space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-8 bg-gray-200 rounded"></div>
+      <div className="bg-white rounded-lg shadow-sm p-5">
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-1/3 mb-3"></div>
+          <div className="h-6 bg-gray-200 rounded mb-4"></div>
+          <div className="grid grid-cols-5 gap-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 bg-gray-200 rounded"></div>
+            ))}
           </div>
         </div>
       </div>
@@ -62,10 +65,10 @@ const ModelMetrics: React.FC = () => {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
         <div className="flex items-center">
-          <svg className="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span className="text-red-700">{error || 'Erro ao carregar métricas'}</span>
+          <span className="text-sm text-red-700">{error || 'Erro ao carregar métricas'}</span>
         </div>
       </div>
     );
@@ -78,19 +81,19 @@ const ModelMetrics: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      {/* Cabeçalho */}
-      <div className="mb-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-1">
+    <div className="bg-white rounded-lg shadow-sm p-5">
+      {/* Cabeçalho compacto */}
+      <div className="mb-4">
+        <h3 className="text-base font-bold text-gray-900 mb-1">
           Modelo de Machine Learning v{metrics.version}
         </h3>
-        <p className="text-sm text-gray-600">
+        <p className="text-xs text-gray-500">
           {metrics.validation_method} • Treinado em {formatDate(metrics.trained_at)} • {metrics.features_count} features
         </p>
       </div>
 
-      {/* Métricas principais */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      {/* Métricas principais - Grid compacto */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <MetricCard
           label="Precision"
           value={formatPercentage(metrics.metrics.precision)}
@@ -119,13 +122,13 @@ const ModelMetrics: React.FC = () => {
         />
       </div>
 
-      {/* Informação extra */}
-      <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+      {/* Informação extra compacta */}
+      <div className="mt-3 p-2.5 bg-blue-50 rounded-lg border border-blue-100">
         <div className="flex items-start">
-          <svg className="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <div className="text-sm text-blue-800">
+          <div className="text-xs text-blue-800">
             <strong>Precision {formatPercentage(metrics.metrics.precision)}:</strong> Quando o modelo prevê desconto, 
             acerta {Math.round(metrics.metrics.precision * 100)} em 100 vezes.
           </div>
