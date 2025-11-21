@@ -19,8 +19,8 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
 
   const getRecommendationText = (recommendation: string, text?: string) => {
     if (text) return text;
-    return recommendation === 'BUY' 
-      ? 'Compre agora! O preço está bom.' 
+    return recommendation === 'BUY'
+      ? 'Compre agora! O preço está bom.'
       : 'Aguarde! Provável desconto em breve.';
   };
 
@@ -39,10 +39,10 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
     if (!dateString) return 'N/A';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('pt-BR', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric' 
+      return date.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
       });
     } catch {
       return dateString;
@@ -56,16 +56,23 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
         <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-4 sm:p-6 text-white relative">
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-white hover:bg-white hover:bg-opacity-20 transition-all rounded-lg p-1.5"
+            className="absolute top-4 right-4 flex items-center justify-center 
+               w-9 h-9 sm:w-10 sm:h-10 rounded-xl
+               text-white/90 hover:text-white 
+               hover:bg-white/20 active:bg-white/30 
+               transition-all backdrop-blur-sm"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <h2 className="text-xl sm:text-2xl font-bold mb-2 pr-8 break-words">{game.name}</h2>
+
+          <h2 className="text-xl sm:text-2xl font-bold mb-2 pr-12 break-words">
+            {game.name}
+          </h2>
+
           <div className="flex items-center gap-4 text-xs sm:text-sm opacity-90">
             <span className="flex items-center gap-1">
-              <span>🎮</span>
               <span>AppID {game.appid}</span>
             </span>
             {game.type && (
@@ -74,21 +81,21 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
           </div>
         </div>
 
-        <Card.Content>
+
+        <Card.Content className="pt-0 px-4 sm:px-6 pb-6">
           {/* Recomendação destacada com ícone grande */}
-          <div className={`relative overflow-hidden rounded-xl p-5 sm:p-6 mb-5 ${
-            prediction.recommendation === 'BUY' 
-              ? 'bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50' 
+          <div className={`relative overflow-hidden rounded-xl p-5 sm:p-6 mb-5 ${prediction.recommendation === 'BUY'
+              ? 'bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50'
               : 'bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50'
-          }`}>
+            }`}>
             <div className="relative z-10">
               <div className="flex items-center gap-3 mb-3">
                 <div className={`text-4xl ${prediction.recommendation === 'BUY' ? 'text-green-600' : 'text-amber-600'}`}>
                   {prediction.recommendation === 'BUY' ? '✓' : '⏱'}
                 </div>
                 <div className="flex-1">
-                  <Badge 
-                    variant={getRecommendationColor(prediction.recommendation)} 
+                  <Badge
+                    variant={getRecommendationColor(prediction.recommendation)}
                     className="text-sm sm:text-base font-bold px-3 py-1.5"
                   >
                     {prediction.recommendation === 'BUY' ? 'COMPRE AGORA' : 'AGUARDE'}

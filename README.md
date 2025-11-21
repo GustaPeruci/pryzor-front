@@ -1,100 +1,133 @@
-#  Pryzor Frontend
 
-Aqui é a cara do Pryzor  a interface que os usuários veem e interagem. É um frontend React que conversa com a API do backend pra mostrar previsões de desconto com Machine Learning.
+# 🎯 Pryzor Frontend
 
-##  Como Rodar
+> **TCC - Engenharia de Software**  
+> Interface React para previsão de descontos na Steam
 
-Você vai precisar de:
-- **Node.js 16+** (ou superior)
+## 💡 O que é?
+
+Frontend do Pryzor: interface moderna em React + TypeScript que consome a API do backend para mostrar previsões de desconto em jogos da Steam usando Machine Learning.
+
+---
+
+## 🚀 Como Rodar
+
+### Requisitos
+
+- **Node.js 16+**
 - **npm** ou **yarn**
 - Backend rodando em http://localhost:8000
 
-### Instalação Rápida
+### Passos
 
 ```bash
-# Entra no diretório do frontend
+# 1. Entre na pasta do frontend
 cd pryzor-front
 
-# Instala as dependências
+# 2. Instale as dependências
 npm install
 
-# Sobe o servidor de desenvolvimento
+# 3. Rode o servidor de desenvolvimento
 npm start
 ```
 
-Pronto! O app vai abrir automaticamente no navegador em http://localhost:3000. Se a API do backend estiver rodando, tá tudo certo pra começar a buscar jogos e ver as previsões.
+O app abrirá em http://localhost:3000. Se a API estiver rodando, já é possível buscar jogos e ver previsões.
 
-##  Estrutura do Projeto
+---
+
+## 📁 Estrutura do Projeto
 
 ```
 src/
- components/          # Componentes React organizados por funcionalidade
-    Header.tsx       # Cabeçalho com logo e título
-    analysis/        # Resultado da análise de previsão (modal)
-       PriceAnalysisResult.tsx
-    games/           # Busca e listagem de jogos
-       GameCard.tsx
-       GameList.tsx
-       GameSearch.tsx
-    ml/              # Métricas do modelo ML
-       ModelMetrics.tsx
-    ui/              # Componentes reutilizáveis (botões, cards, inputs)
-        Badge.tsx
-        Button.tsx
-        Card.tsx
-        Input.tsx
-        LoadingSpinner.tsx
-
- services/            # Camada de comunicação com a API
-    api.ts           # Axios client + endpoints do backend
-
- App.tsx              # Componente principal (orquestrador)
- index.tsx            # Ponto de entrada da aplicação
+   components/
+      Header.tsx
+      analysis/
+         PriceAnalysisResult.tsx
+      games/
+         GameCard.tsx
+         GameList.tsx
+         GameSearch.tsx
+      ml/
+         ModelMetrics.tsx
+      ui/
+         Badge.tsx
+         Button.tsx
+         Card.tsx
+         Input.tsx
+         LoadingSpinner.tsx
+   services/
+      api.ts
+   App.tsx
+   index.tsx
 ```
 
-##  Tech Stack
+---
 
-- **React 19**  Framework JavaScript pra construir interfaces
-- **TypeScript**  JavaScript com tipagem estática (menos bugs, mais produtividade)
-- **Tailwind CSS v4.1**  Utility-first CSS (escreve classes direto no HTML)
-- **Axios**  HTTP client pra fazer chamadas na API do backend
-- **Vite**  Build tool super rápido (substitui o Create React App)
+## 🛠️ Tecnologias
 
-##  Como se Conecta com a API
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS v4.1**
+- **Axios**
+- **Vite**
 
-O arquivo `src/services/api.ts` é o ponto central de comunicação. Ele define:
+---
+
+## 📡 Integração com a API
+
+O arquivo `src/services/api.ts` centraliza a comunicação com o backend.
 
 ### Endpoints Usados
 
 ```typescript
-// Buscar jogos
 GET /api/games?search={query}&limit={n}
-
-// Informações do modelo ML
 GET /api/ml/info
-
-// Fazer previsão pra um jogo específico
 GET /api/ml/predict/{appid}
 ```
 
-### Resposta da Previsão
-
-Quando você clica em **"Analisar"** num jogo, o frontend chama `mlApi.predictGame(appid)` e recebe algo assim:
+### Exemplo de resposta de previsão
 
 ```json
 {
-  "appid": 570,
-  "prediction": 1,
-  "probability": 0.87,
-  "recommendation": "WAIT",
-  "confidence": "high",
-  "features": {
-    "current_discount_percent": 0,
-    "month": 10,
-    "quarter": 4
-  }
+   "appid": 570,
+   "prediction": 1,
+   "probability": 0.87,
+   "recommendation": "WAIT",
+   "confidence": "high",
+   "features": {
+      "current_discount_percent": 0,
+      "month": 10,
+      "quarter": 4
+   }
 }
 ```
+
+---
+
+
+## 🧪 Testes Automatizados
+
+- Cobertura completa dos principais componentes e fluxos de usuário
+- Testes para busca, análise, exibição de métricas, callbacks e estados de interface
+- Componentes testados:
+   - `GameCard`, `GameList`, `GameSearch`, `ModelMetrics`, `PriceAnalysisResult`, `Header`, `App`
+- Testes incluem:
+   - Renderização, interações, callbacks, estados de loading/erro, múltiplos elementos, integração com mocks
+- Configuração robusta para TypeScript, ESM e React 19
+- Todos os testes passam e cobrem os fluxos essenciais para apresentação de portfólio/TCC
+
+### Como rodar os testes
+
+```bash
+npm test
+```
+
+Os testes utilizam Jest + React Testing Library. Para detalhes, veja os arquivos em `src/components/*/*.test.tsx`.
+
+---
+
+---
+
 
 ### Como Interpretar
 
@@ -140,9 +173,6 @@ npm start
 
 # Faz o build pra produção
 npm run build
-
-# Roda os testes
-npm test
 
 # Checa erros de lint
 npm run lint
