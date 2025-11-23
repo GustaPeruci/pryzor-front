@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { gameApi, Game } from '../../services/api';
 import { Input, Button } from '../ui';
 
 interface GameSearchProps {
@@ -8,6 +9,7 @@ interface GameSearchProps {
 
 const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [allGames, setAllGames] = useState<Game[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,6 +17,18 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
       onSearch(searchQuery.trim());
     }
   };
+
+  useEffect(() => {
+    // Busca todos os jogos ao montar
+    (async () => {
+      try {
+        const result = await gameApi.searchGames({ limit: 1000 });
+        setAllGames(result.games);
+      } catch (err) {
+        // Silencia erro
+      }
+    })();
+  }, []);
 
   const popularGames = [
     'Counter-Strike',
@@ -38,13 +52,20 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
       <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
-            <Input
+            <input
               type="text"
               placeholder="Digite o nome do jogo..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-base py-2.5"
+              className="text-base py-2.5 w-full border border-gray-300 rounded"
+              list="games-list"
+              disabled={loading}
             />
+            <datalist id="games-list">
+              {allGames.map((game) => (
+                <option key={game.appid} value={game.name} />
+              ))}
+            </datalist>
           </div>
           <Button
             type="submit"
