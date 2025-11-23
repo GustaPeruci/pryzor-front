@@ -2,19 +2,17 @@ import React, { useState, useCallback } from 'react';
 import Header from './components/Header';
 import ModelMetrics from './components/ml/ModelMetrics';
 import GameSearch from './components/games/GameSearch';
-import GameList from './components/games/GameList';
 import PriceAnalysisResult from './components/analysis/PriceAnalysisResult';
 import { gameApi, mlApi, Game, MLPrediction } from './services/api';
 
 function App() {
-  const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(false);
-  const [analyzingGameId, setAnalyzingGameId] = useState<number | undefined>();
   const [analysis, setAnalysis] = useState<{
     prediction: MLPrediction;
     game: Game;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showMetricsModal, setShowMetricsModal] = useState(false);
 
   const handleSearch = useCallback(async (query: string) => {
     setLoading(true);
@@ -23,41 +21,33 @@ function App() {
     try {
       const result = await gameApi.searchGames({
         search: query,
-        limit: 20
+        limit: 1
       });
-      setGames(result.games);
+      
+      if (result.games.length === 0) {
+        setError('Nenhum jogo encontrado com esse nome.');
+        setLoading(false);
+        return;
+      }
+      
+      const game = result.games[0];
+      
+      // Buscar predição diretamente
+      const prediction = await mlApi.predictGame(game.appid);
+      
+      setAnalysis({
+        prediction,
+        game
+      });
     } catch (err) {
-      console.error('Erro na busca:', err);
-      setError('Erro ao buscar jogos. Verifique se a API está rodando.');
-      setGames([]);
+      console.error('Erro na busca/análise:', err);
+      setError('Erro ao buscar jogo ou fazer previsão. Verifique se a API está rodando.');
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const handleAnalyze = useCallback(async (gameId: number) => {
-    setAnalyzingGameId(gameId);
-    setError(null);
-
-    try {
-      const prediction = await mlApi.predictGame(gameId);
-      const gameData = games.find(g => g.appid === gameId);
-
-      if (!gameData) {
-        throw new Error('Jogo não encontrado');
-      }
-
-      setAnalysis({
-        prediction,
-        game: gameData
-      });
-    } catch (err) {
-      console.error('Erro na análise:', err);
-      setError('Erro ao fazer previsão. Verifique se a API está rodando.');
-    } finally {
-      setAnalyzingGameId(undefined);
-    }
-  }, [games]);
+  // handleAnalyze removido - busca agora faz predição diretamente
 
   const closeAnalysis = () => {
     setAnalysis(null);
@@ -65,18 +55,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
-      
+      <Header onOpenMetricsModal={() => setShowMetricsModal(true)} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section com Busca */}
         <div className="mb-8">
           <GameSearch onSearch={handleSearch} loading={loading} />
         </div>
 
-        {/* Métricas do Modelo - Compactas */}
-        <div className="mb-8">
-          <ModelMetrics />
-        </div>
+        {/* ...botão removido, agora está no header... */}
 
         {/* Mensagem de erro */}
         {error && (
@@ -90,20 +76,7 @@ function App() {
           </div>
         )}
 
-        {/* Lista de jogos */}
-        {(games.length > 0 || loading) && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Resultados da Busca
-            </h2>
-            <GameList
-              games={games}
-              loading={loading}
-              onAnalyze={handleAnalyze}
-              analyzingGameId={analyzingGameId}
-            />
-          </div>
-        )}
+        {/* Lista removida - busca abre modal diretamente */}
       </main>
 
       {/* Modal de análise */}
@@ -113,6 +86,23 @@ function App() {
           game={analysis.game}
           onClose={closeAnalysis}
         />
+      )}
+
+      {/* Modal de métricas do modelo */}
+      {showMetricsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowMetricsModal(false)}
+              aria-label="Fechar"
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold mb-4 text-gray-800">Métricas do Modelo</h2>
+            <ModelMetrics />
+          </div>
+        </div>
       )}
     </div>
   );

@@ -1,10 +1,14 @@
 import React from 'react';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onOpenMetricsModal?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onOpenMetricsModal }) => {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16">
+        <div className="flex items-center h-16 justify-between">
           {/* Logo e Nome */}
           <div className="flex items-center space-x-3">
             <div className="flex items-center justify-center w-10 h-10 bg-primary-600 rounded-lg shadow-md">
@@ -27,6 +31,13 @@ const Header: React.FC = () => {
               <p className="text-xs text-gray-500">Análise de Preços Steam</p>
             </div>
           </div>
+          {/* Botão de métricas do modelo */}
+          <button
+            className="px-4 py-2 bg-primary-600 text-white rounded shadow hover:bg-primary-700 transition"
+            onClick={onOpenMetricsModal}
+          >
+            Ver Métricas do Modelo
+          </button>
         </div>
       </div>
     </header>
