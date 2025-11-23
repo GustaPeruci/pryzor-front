@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { gameApi, Game } from '../../services/api';
 import { Input, Button } from '../ui';
 
@@ -10,11 +10,44 @@ interface GameSearchProps {
 const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [allGames, setAllGames] = useState<Game[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       onSearch(searchQuery.trim());
+      setShowSuggestions(false);
+    }
+  };
+
+  const filteredGames = searchQuery.length > 0
+    ? allGames.filter(g => g.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 10)
+    : [];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setShowSuggestions(true);
+    setHighlightedIndex(-1);
+  };
+
+  const handleSuggestionClick = (name: string) => {
+    setSearchQuery(name);
+    setShowSuggestions(false);
+    onSearch(name);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions || filteredGames.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      setHighlightedIndex(idx => Math.min(idx + 1, filteredGames.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      setHighlightedIndex(idx => Math.max(idx - 1, 0));
+    } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+      handleSuggestionClick(filteredGames[highlightedIndex].name);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
     }
   };
 
@@ -49,23 +82,40 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
+      <form onSubmit={handleSubmit} className="max-w-2xl mx-auto relative">
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <input
+              ref={inputRef}
               type="text"
               placeholder="Digite o nome do jogo..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-base py-2.5 w-full border border-gray-300 rounded"
-              list="games-list"
+              onChange={handleInputChange}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+              onKeyDown={handleKeyDown}
+              className="text-base py-4 w-full border border-gray-300 rounded shadow focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
               disabled={loading}
+              autoComplete="off"
             />
-            <datalist id="games-list">
-              {allGames.map((game) => (
-                <option key={game.appid} value={game.name} />
-              ))}
-            </datalist>
+            {showSuggestions && filteredGames.length > 0 && (
+              <ul className="absolute left-0 right-0 mt-2 bg-white border-2 border-gray-300 rounded-lg shadow-xl z-10 max-h-60 overflow-y-auto p-2">
+                {filteredGames.map((game, idx) => (
+                  <li
+                    key={game.appid}
+                    className={`px-4 py-3 cursor-pointer rounded-md transition-all duration-200
+                      ${highlightedIndex === idx 
+                        ? 'bg-primary-600 text-white font-bold border-2 border-primary-700 shadow-md' 
+                        : 'bg-white border-2 border-gray-300 hover:bg-primary-600 hover:text-white hover:border-primary-700 hover:shadow-md'
+                      }`}
+                    onMouseDown={() => handleSuggestionClick(game.name)}
+                    onMouseEnter={() => setHighlightedIndex(idx)}
+                  >
+                    {game.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <Button
             type="submit"
