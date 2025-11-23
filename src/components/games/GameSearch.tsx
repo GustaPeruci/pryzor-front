@@ -72,7 +72,7 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
   ];
 
   return (
-    <div className="bg-gradient-to-br from-primary-50 to-white p-6 rounded-2xl shadow-sm">
+    <div style={{backgroundColor: '#d4e3ee'}} className="p-6 rounded-2xl shadow-sm">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           Encontre o Melhor Preço
@@ -99,15 +99,16 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
               autoComplete="off"
             />
             {showSuggestions && filteredGames.length > 0 && (
-              <ul className="absolute left-0 right-0 mt-2 bg-white border-2 border-gray-300 rounded-lg shadow-xl z-10 max-h-60 overflow-y-auto p-2">
+              <ul style={{backgroundColor: '#d4e3ee'}} className="absolute left-0 right-0 mt-2 border-2 border-gray-300 rounded-lg shadow-xl z-10 max-h-60 overflow-y-auto p-2">
                 {filteredGames.map((game, idx) => (
                   <li
                     key={game.appid}
                     className={`px-4 py-3 cursor-pointer rounded-md transition-all duration-200
                       ${highlightedIndex === idx 
                         ? 'bg-primary-600 text-white font-bold border-2 border-primary-700 shadow-md' 
-                        : 'bg-white border-2 border-gray-300 hover:bg-primary-600 hover:text-white hover:border-primary-700 hover:shadow-md'
+                        : 'border-2 border-gray-300 hover:bg-primary-600 hover:text-white hover:border-primary-700 hover:shadow-md'
                       }`}
+                    style={highlightedIndex !== idx ? {backgroundColor: '#afd5f0ff'} : undefined}
                     onMouseDown={() => handleSuggestionClick(game.name)}
                     onMouseEnter={() => setHighlightedIndex(idx)}
                   >
@@ -142,7 +143,7 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
         </div>
       </form>
 
-      {/* Sugestões populares compactas */}
+      {/* Sugestões populares compactas
       <div className="mt-5 text-center">
         <p className="text-xs text-gray-500 mb-2">Jogos populares:</p>
         <div className="flex flex-wrap justify-center gap-2">
@@ -160,7 +161,7 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
