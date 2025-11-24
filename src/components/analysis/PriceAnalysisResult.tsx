@@ -108,9 +108,15 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
             <div className="flex-1 bg-white border-2 border-gray-200 rounded-lg p-4 text-center" style={{ backgroundColor: '#d4e3ee' }}>
               <div className="text-xs text-gray-600 font-medium mb-2">Preço Atual</div>
               <div className="text-2xl font-bold text-gray-900">
-                {game.freetoplay === 1 ? 'Free' : formatPrice(game.current_price)}
+                {game.freetoplay === 1
+                  ? 'Free'
+                  : (typeof game.current_price === 'number' && !isNaN(game.current_price))
+                    ? `$ ${game.current_price.toFixed(2)}`
+                    : (typeof prediction.current_price === 'number' && !isNaN(prediction.current_price))
+                      ? `$ ${prediction.current_price.toFixed(2)}`
+                      : 'N/A'}
               </div>
-              {prediction.current_discount > 0 && (
+              {typeof prediction.current_discount === 'number' && prediction.current_discount > 0 && (
                 <div className="text-xs text-gray-600 font-semibold mt-1">
                   -{prediction.current_discount}% OFF
                 </div>
