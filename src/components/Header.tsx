@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenMetricsModal }) => {
           </div>
           {/* Botão de métricas do modelo */}
           <button
-            className="px-4 py-2 bg-primary-600 text-white rounded shadow hover:bg-primary-700 transition"
+            className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-700 transition"
             onClick={onOpenMetricsModal}
           >
             Ver Métricas do Modelo

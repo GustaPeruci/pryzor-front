@@ -54,29 +54,31 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header onOpenMetricsModal={() => setShowMetricsModal(true)} />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section com Busca */}
-        <div className="mb-8">
-          <GameSearch onSearch={handleSearch} loading={loading} />
-        </div>
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-4xl">
+          {/* Hero Section com Busca */}
+          <div className="mb-8">
+            <GameSearch onSearch={handleSearch} loading={loading} />
+          </div>
 
         {/* ...botão removido, agora está no header... */}
 
-        {/* Mensagem de erro */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <div className="flex items-center">
-              <svg className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p className="text-red-700">{error}</p>
+          {/* Mensagem de erro */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center">
+                <svg className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-red-700">{error}</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Lista removida - busca abre modal diretamente */}
+          {/* Lista removida - busca abre modal diretamente */}
+        </div>
       </main>
 
       {/* Modal de análise */}
@@ -90,10 +92,16 @@ function App() {
 
       {/* Modal de métricas do modelo */}
       {showMetricsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-lg w-full relative">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 px-4"
+          onClick={() => setShowMetricsModal(false)}
+        >
+          <div 
+            className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full relative"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl leading-none"
               onClick={() => setShowMetricsModal(false)}
               aria-label="Fechar"
             >
