@@ -82,8 +82,8 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
 
         <Card.Content className="pt-6 px-4 sm:px-6 pb-6">
           {/* Cards de métricas principais lado a lado */}
-          <div className="flex flex-row gap-4 mb-6 justify-center">
-            <div className="flex-1 bg-white border-2 border-gray-200 rounded-lg p-4 text-center">
+          <div className="flex flex-row gap-4 mb-6 justify-center" style={{backgroundColor: '#d4e3ee', borderRadius: '8px', padding: '10px'}}>
+            <div className="flex-1 bg-white border-2 border-gray-200 rounded-lg p-4 text-center" style={{backgroundColor: '#d4e3ee'}}>
               <div className="text-xs text-gray-600 font-medium mb-2">Confiança</div>
               <div className="text-2xl font-bold text-gray-900">
                 {getConfidenceText(prediction.confidence)}
@@ -93,14 +93,14 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
               </div>
             </div>
 
-            <div className="flex-1 bg-white border-2 border-gray-200 rounded-lg p-4 text-center">
+            <div className="flex-1 bg-white border-2 border-gray-200 rounded-lg p-4 text-center" style={{backgroundColor: '#d4e3ee'}}>
               <div className="text-xs text-gray-600 font-medium mb-2">Previsão</div>
               <div className="text-lg font-bold text-gray-900 leading-tight">
                 {prediction.will_have_discount ? 'Sem desconto' : 'Desconto >20%'}
               </div>
             </div>
 
-            <div className="flex-1 bg-white border-2 border-gray-200 rounded-lg p-4 text-center">
+            <div className="flex-1 bg-white border-2 border-gray-200 rounded-lg p-4 text-center" style={{backgroundColor: '#d4e3ee'}}>
               <div className="text-xs text-gray-600 font-medium mb-2">Preço Atual</div>
               <div className="text-2xl font-bold text-gray-900">
                 {game.freetoplay === 1 ? 'Free' : formatPrice(game.current_price)}
@@ -131,7 +131,7 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
           )}
 
           {/* Informações técnicas e modelo */}
-          <div className="grid grid-cols-2 gap-4 mb-5">
+          {/* <div className="grid grid-cols-2 gap-4 mb-5">
             <div className="bg-white rounded-lg p-4 border-2 border-gray-200">
               <div className="text-xs text-gray-600 font-medium mb-1">Modelo ML</div>
               <div className="font-bold text-gray-900">v{prediction.model_version}</div>
@@ -142,10 +142,10 @@ const PriceAnalysisResult: React.FC<PriceAnalysisResultProps> = ({
               <div className="font-bold text-gray-900">90.46%</div>
               <div className="text-xs text-gray-500 mt-1">Validação temporal</div>
             </div>
-          </div>
+          </div> */}
 
           {/* Footer com info adicional */}
-          <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4 text-center">
+          <div className="bg-gray-50 border-2 rounded-lg p-4 text-center" style={{backgroundColor: '#d4e3ee'}}>
             <p className="text-xs text-gray-600">
               <strong className="text-gray-900">Como funciona:</strong> Analisamos o histórico de preços e padrões de desconto para prever descontos maiores que 20% nos próximos 30 dias.
             </p>

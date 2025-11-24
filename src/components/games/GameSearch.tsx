@@ -97,6 +97,7 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
               className="text-base py-4 w-full border border-gray-300 rounded shadow focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
               disabled={loading}
               autoComplete="off"
+              style={{ paddingLeft: '10px' }}
             />
             {showSuggestions && filteredGames.length > 0 && (
               <ul style={{backgroundColor: '#d4e3ee'}} className="absolute left-0 right-0 mt-2 border-2 border-gray-300 rounded-lg shadow-xl z-10 max-h-60 overflow-y-auto p-2">
