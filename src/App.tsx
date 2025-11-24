@@ -93,7 +93,7 @@ function App() {
       {/* Modal de métricas do modelo */}
       {showMetricsModal && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 px-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 px-4" style={{backgroundColor: '#00000069'}}
           onClick={() => setShowMetricsModal(false)}
         >
           <div 
@@ -101,11 +101,12 @@ function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl leading-none"
+              className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-gray-600 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 transition-all backdrop-blur-sm"
+              style={{ position: 'absolute', top: 12, right: 12, paddingLeft: '5px', paddingRight: '5px' }}
               onClick={() => setShowMetricsModal(false)}
               aria-label="Fechar"
             >
-              &times;
+              <span className="text-2xl leading-none">&times;</span>
             </button>
             <h2 className="text-xl font-bold mb-4 text-gray-800">Métricas do Modelo</h2>
             <ModelMetrics />

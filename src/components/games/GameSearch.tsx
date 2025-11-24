@@ -35,17 +35,22 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
   const handleSuggestionClick = (name: string) => {
     setSearchQuery(name);
     setShowSuggestions(false);
-    onSearch(name);
+    // Não chama onSearch aqui - apenas preenche o input
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions || filteredGames.length === 0) return;
     if (e.key === 'ArrowDown') {
+      e.preventDefault();
       setHighlightedIndex(idx => Math.min(idx + 1, filteredGames.length - 1));
     } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
       setHighlightedIndex(idx => Math.max(idx - 1, 0));
     } else if (e.key === 'Enter' && highlightedIndex >= 0) {
-      handleSuggestionClick(filteredGames[highlightedIndex].name);
+      e.preventDefault();
+      setSearchQuery(filteredGames[highlightedIndex].name);
+      setShowSuggestions(false);
+      // Não chama onSearch - apenas preenche o input
     } else if (e.key === 'Escape') {
       setShowSuggestions(false);
     }
