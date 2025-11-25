@@ -3,12 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import GameSearch from './GameSearch';
 
 describe('GameSearch', () => {
-  it('renderiza título e popular games', () => {
+  it('renderiza título e campo de busca', () => {
     render(<GameSearch onSearch={() => {}} />);
     expect(screen.getByText(/Encontre o Melhor Preço/i)).toBeInTheDocument();
-    expect(screen.getByText(/Counter-Strike/i)).toBeInTheDocument();
-    expect(screen.getByText(/Portal/i)).toBeInTheDocument();
-    expect(screen.getByText(/Dota 2/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Digite o nome do jogo/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Buscar/i })).toBeInTheDocument();
   });
 
   it('chama onSearch ao submeter', () => {

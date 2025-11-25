@@ -32,10 +32,10 @@ describe('PriceAnalysisResult', () => {
   it('renderiza informações de predição', () => {
     render(<PriceAnalysisResult prediction={mockPrediction} game={mockGame} onClose={() => {}} />);
     expect(screen.getByText(/Counter-Strike/i)).toBeInTheDocument();
-    expect(screen.getByText(/Espere por desconto melhor/i)).toBeInTheDocument();
-    expect(screen.getByText(/2.0/)).toBeInTheDocument();
+    expect(screen.getByText(/AGUARDE/i)).toBeInTheDocument();
     expect(screen.getByText(/Sazonalidade/)).toBeInTheDocument();
     expect(screen.getByText(/Desconto atual/)).toBeInTheDocument();
+    expect(screen.getByText(/29.99/)).toBeInTheDocument();
   });
 
   it('chama onClose ao clicar no botão', () => {
