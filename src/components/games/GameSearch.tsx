@@ -60,21 +60,13 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
     // Busca todos os jogos ao montar
     (async () => {
       try {
-        const result = await gameApi.searchGames({ limit: 1000 });
+        const result = await gameApi.searchGames({ limit: 2000 });
         setAllGames(result.games);
       } catch (err) {
         // Silencia erro
       }
     })();
   }, []);
-
-  const popularGames = [
-    'Counter-Strike',
-    'Portal',
-    'Dota 2',
-    'Cities: Skylines',
-    'Left 4 Dead 2'
-  ];
 
   return (
     <div style={{backgroundColor: '#d4e3ee'}} className="p-6 rounded-2xl shadow-sm">
