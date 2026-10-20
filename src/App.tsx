@@ -7,115 +7,61 @@ import { gameApi, mlApi, Game, MLPrediction } from './services/api';
 
 function App() {
   const [loading, setLoading] = useState(false);
-  const [analysis, setAnalysis] = useState<{
-    prediction: MLPrediction;
-    game: Game;
-  } | null>(null);
+  const [analysis, setAnalysis] = useState<{ prediction: MLPrediction; game: Game } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showMetricsModal, setShowMetricsModal] = useState(false);
 
   const handleSearch = useCallback(async (query: string) => {
     setLoading(true);
     setError(null);
-    
     try {
-      const result = await gameApi.searchGames({
-        search: query,
-        limit: 1
-      });
-      
-      if (result.games.length === 0) {
-        setError('Nenhum jogo encontrado com esse nome.');
-        setLoading(false);
+      const result = await gameApi.searchGames({ search: query, limit: 1 });
+      if (!result.games.length) {
+        setError('Nenhum jogo encontrado com esse nome. Tente outra busca.');
         return;
       }
-      
       const game = result.games[0];
-      
-      // Buscar predição diretamente
       const prediction = await mlApi.predictGame(game.appid);
-      
-      setAnalysis({
-        prediction,
-        game
-      });
+      setAnalysis({ prediction, game });
     } catch (err) {
       console.error('Erro na busca/análise:', err);
-      setError('Erro ao buscar jogo ou fazer previsão. Verifique se a API está rodando.');
+      setError('Não foi possível analisar o jogo. Verifique a conexão com a API e tente novamente.');
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // handleAnalyze removido - busca agora faz predição diretamente
-
-  const closeAnalysis = () => {
-    setAnalysis(null);
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="pryzor-app">
       <Header onOpenMetricsModal={() => setShowMetricsModal(true)} />
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-4xl">
-          {/* Hero Section com Busca */}
-          <div className="mb-8">
-            <GameSearch onSearch={handleSearch} loading={loading} />
+      <main className="pryzor-main">
+        <div className="pryzor-glow" aria-hidden="true" />
+        <div className="pryzor-content">
+          <div className="pryzor-eyebrow"><span className="pryzor-status-dot" /> INTELIGÊNCIA DE PREÇOS PARA GAMES</div>
+          <h1 className="pryzor-headline">Seu próximo jogo.<br /><span>Na hora certa.</span></h1>
+          <p className="pryzor-subtitle">Use inteligência artificial para descobrir se vale a pena comprar agora ou esperar a próxima promoção na Steam.</p>
+          <GameSearch onSearch={handleSearch} loading={loading} />
+          {error && <div role="alert" className="pryzor-error">{error}</div>}
+          <div className="pryzor-trust">
+            <span>✦ Previsões com machine learning</span>
+            <span>◇ Análise de tendências</span>
+            <span>◎ Decisões mais inteligentes</span>
           </div>
-
-        {/* ...botão removido, agora está no header... */}
-
-          {/* Mensagem de erro */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <div className="flex items-center">
-                <svg className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-red-700">{error}</p>
-              </div>
-            </div>
-          )}
-
-          {/* Lista removida - busca abre modal diretamente */}
         </div>
       </main>
-
-      {/* Modal de análise */}
-      {analysis && (
-        <PriceAnalysisResult
-          prediction={analysis.prediction}
-          game={analysis.game}
-          onClose={closeAnalysis}
-        />
-      )}
-
-      {/* Modal de métricas do modelo */}
+      <footer className="pryzor-footer"><span>© {new Date().getFullYear()} Pryzor</span><span>Projeto de Engenharia de Software · Previsões não garantem descontos futuros.</span></footer>
+      {analysis && <PriceAnalysisResult prediction={analysis.prediction} game={analysis.game} onClose={() => setAnalysis(null)} />}
       {showMetricsModal && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 px-4" style={{backgroundColor: '#00000069'}}
-          onClick={() => setShowMetricsModal(false)}
-        >
-          <div 
-            className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-gray-600 hover:text-gray-800 hover:bg-gray-100 active:bg-gray-200 transition-all backdrop-blur-sm"
-              style={{ position: 'absolute', top: 12, right: 12, paddingLeft: '5px', paddingRight: '5px' }}
-              onClick={() => setShowMetricsModal(false)}
-              aria-label="Fechar"
-            >
-              <span className="text-2xl leading-none">&times;</span>
-            </button>
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Métricas do Modelo</h2>
+        <div className="pryzor-modal-overlay" onClick={() => setShowMetricsModal(false)}>
+          <section role="dialog" aria-modal="true" aria-label="Métricas do modelo" className="pryzor-modal" onClick={e => e.stopPropagation()}>
+            <button className="pryzor-modal-close" onClick={() => setShowMetricsModal(false)} aria-label="Fechar métricas">×</button>
+            <h2>Métricas do modelo</h2>
+            <p>Indicadores de avaliação do modelo preditivo.</p>
             <ModelMetrics />
-          </div>
+          </section>
         </div>
       )}
     </div>
   );
 }
-
 export default App;
-

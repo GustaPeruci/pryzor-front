@@ -439,3 +439,46 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
+
+
+/* Pryzor portfolio refresh — scoped styles keep legacy component contracts intact */
+.pryzor-app{min-height:100vh;display:flex;flex-direction:column;background:#080d1b;color:#f8fafc;font-family:Inter,system-ui,sans-serif}
+.pryzor-header{position:relative;z-index:20;border-bottom:1px solid rgba(148,163,184,.14);background:rgba(8,13,27,.9)}
+.pryzor-header-inner{max-width:1180px;margin:auto;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.pryzor-brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.pryzor-brand-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#7c6cff,#4b42b7);box-shadow:0 8px 25px #6e60ed35}
+.pryzor-brand-icon svg{width:25px;height:25px}
+.pryzor-brand strong{display:block;font-size:22px;line-height:1.1;letter-spacing:-.7px}
+.pryzor-dot{color:#a9a1ff}
+.pryzor-brand small{display:block;color:#94a3b8;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-top:4px}
+.pryzor-metrics-button{border:1px solid #353c55;background:#161d32;color:#e8eafa;border-radius:11px;padding:12px 17px;font-weight:600;cursor:pointer;transition:background .2s,border-color .2s}
+.pryzor-metrics-button:hover{background:#222b49;border-color:#8074ea}
+.pryzor-main{position:relative;isolation:isolate;flex:1;display:flex;align-items:center;justify-content:center;padding:96px 24px 110px;overflow:hidden}
+.pryzor-glow{position:absolute;z-index:-1;width:min(900px,100vw);height:650px;top:-190px;left:50%;transform:translateX(-50%);background:radial-gradient(ellipse,#34317d66 0%,#1a24554a 34%,transparent 72%);pointer-events:none}
+.pryzor-content{width:100%;max-width:850px;text-align:center}
+.pryzor-eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid #37395b;background:#171a32;color:#c1baff;padding:9px 15px;border-radius:30px;font-size:11px;letter-spacing:1.5px;font-weight:700}
+.pryzor-status-dot{width:7px;height:7px;border-radius:50%;background:#a59aff;box-shadow:0 0 12px #a59aff}
+.pryzor-headline{margin:28px 0 20px;font-size:clamp(46px,7vw,82px);line-height:1.09;letter-spacing:-3.8px;font-weight:800;color:#fff}
+.pryzor-headline span{background:linear-gradient(95deg,#a79aff,#6daaff);background-clip:text;-webkit-background-clip:text;color:transparent}
+.pryzor-subtitle{max-width:610px;margin:0 auto 40px;color:#aeb8d1;font-size:17px;line-height:1.8}
+.pryzor-content .rounded-2xl{background:#151c31!important;border:1px solid #303a55;border-radius:20px;box-shadow:0 24px 65px #0005;padding:28px}
+.pryzor-content .rounded-2xl h2{color:#f3f5ff;font-size:20px}
+.pryzor-content .rounded-2xl p{color:#aab5cf}
+.pryzor-content input[type=text]{background:#0c1326;color:#f8fafc;border:1px solid #424b65;border-radius:10px;min-height:54px;padding:14px!important;outline:none}
+.pryzor-content input[type=text]:focus{border-color:#9c8dff;box-shadow:0 0 0 3px #8b7cf333}
+.pryzor-content input[type=text]::placeholder{color:#7e8ba9}
+.pryzor-content button[type=submit]{background:#7968ed;color:#fff;border-radius:10px;min-height:54px;font-weight:700}
+.pryzor-content button[type=submit]:hover{background:#9183ff}
+.pryzor-content ul{background:#202945!important;border-color:#475374!important}
+.pryzor-content li{background:transparent!important;border:0!important;color:#e9edff}
+.pryzor-content li:hover{background:#3c4671!important}
+.pryzor-trust{display:flex;flex-wrap:wrap;gap:14px 28px;justify-content:center;margin-top:30px;color:#8f9cb9;font-size:12px}
+.pryzor-error{max-width:650px;margin:20px auto 0;padding:14px 18px;text-align:left;background:#4d202b;color:#ffe0e5;border:1px solid #a64b61;border-radius:12px}
+.pryzor-footer{display:flex;justify-content:space-between;gap:20px;max-width:1180px;width:100%;margin:auto;padding:24px 28px;color:#7886a3;font-size:12px;border-top:1px solid #222a40}
+.pryzor-modal-overlay{position:fixed;inset:0;z-index:100;background:#030713c9;display:flex;align-items:center;justify-content:center;padding:18px}
+.pryzor-modal{position:relative;width:min(720px,100%);max-height:90vh;overflow:auto;background:#fff;color:#1c2740;border-radius:20px;padding:30px;box-shadow:0 24px 80px #0008}
+.pryzor-modal h2{font-size:24px;color:#172033;margin-bottom:8px}
+.pryzor-modal p{color:#64748b;margin-bottom:22px}
+.pryzor-modal-close{position:absolute;right:18px;top:12px;background:none;border:0;font-size:30px;cursor:pointer;color:#475569}
+@media(max-width:640px){.pryzor-header-inner{padding:14px 18px}.pryzor-brand small{display:none}.pryzor-metrics-button{font-size:12px;padding:10px}.pryzor-main{padding:68px 16px 75px}.pryzor-headline{letter-spacing:-2px}.pryzor-subtitle{font-size:15px}.pryzor-content .rounded-2xl{padding:20px}.pryzor-footer{flex-direction:column;text-align:center;padding:20px}.pryzor-trust{gap:12px}}
+@media(prefers-reduced-motion:reduce){.pryzor-app *{transition:none!important;animation:none!important}}
