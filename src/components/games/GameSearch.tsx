@@ -13,6 +13,7 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const inputRef = useRef<HTMLInputElement>(null);
+  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,15 +58,19 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
   };
 
   useEffect(() => {
-    // Busca todos os jogos ao montar
+    let active = true;
     (async () => {
       try {
         const result = await gameApi.searchGames({ limit: 2000 });
-        setAllGames(result.games);
-      } catch (err) {
-        // Silencia erro
+        if (active) setAllGames(result.games);
+      } catch {
+        // Sugestões são opcionais; a busca principal continua disponível.
       }
     })();
+    return () => {
+      active = false;
+      if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current);
+    };
   }, []);
 
   return (
@@ -89,7 +94,7 @@ const GameSearch: React.FC<GameSearchProps> = ({ onSearch, loading = false }) =>
               value={searchQuery}
               onChange={handleInputChange}
               onFocus={() => setShowSuggestions(true)}
-              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+              onBlur={() => { blurTimeoutRef.current = setTimeout(() => setShowSuggestions(false), 150); }}
               onKeyDown={handleKeyDown}
               className="text-base py-4 w-full border border-gray-300 rounded shadow focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
               disabled={loading}
